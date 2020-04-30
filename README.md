@@ -32,3 +32,4 @@ As a result prints something like this:
 ## TODO
 
 [ ] Implement saving result to new CSV file
+[ ] Mock requests in spec to make test stable
