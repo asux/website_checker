@@ -18,7 +18,9 @@ class WebsiteChecker
   def run
     results = []
     csv = CSV.open(input_file, headers: true).read
-    raise UnableToFindHeader unless csv.headers.include?(HEADER)
+    unless csv.headers.include?(HEADER)
+      raise UnableToFindHeader, "File #{input_file} does not contain header #{HEADER.inspect}"
+    end
 
     csv.each do |row|
       results << { host: row[HEADER], result: check(row[HEADER]) }

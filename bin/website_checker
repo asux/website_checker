@@ -13,7 +13,7 @@ begin
 rescue Errno::ENOENT
   warn "File #{input_file} does not exist"
   exit 1
-rescue WebsiteChecker::UnableToFindHeader
-  warn "File #{input_file} does not contain a valid header #{WebsiteChecker::HEADER.inspect}"
+rescue WebsiteChecker::UnableToFindHeader => e
+  warn e
   exit 2
 end
