@@ -5,12 +5,15 @@ require_relative '../lib/website_checker'
 
 input_file = ARGV[0]
 
-unless File.exist?(input_file)
+begin
+  WebsiteChecker.new(input_file).run.each do |result|
+    params = { host: result[:host], result: result[:result] ? 'OK' : 'FAIL' }
+    puts format('%<host>s => %<result>s', params)
+  end
+rescue Errno::ENOENT
   warn "File #{input_file} does not exist"
   exit 1
-end
-
-WebsiteChecker.new(input_file).run.each do |result|
-  params = { host: result[:host], result: result[:result] ? 'OK' : 'FAIL' }
-  puts format('%<host>s => %<result>s', params)
+rescue WebsiteChecker::UnableToFindHeader
+  warn "File #{input_file} does not contain a valid header #{WebsiteChecker::HEADER.inspect}"
+  exit 2
 end

@@ -2,9 +2,14 @@
 
 require 'csv'
 require 'net/ping/tcp'
+require 'pry'
 
 # Checks host for availablity using `Net::Ping` from CSV file with `URL` header
 class WebsiteChecker
+  class UnableToFindHeader < StandardError; end
+
+  HEADER = 'URL'
+
   attr_reader :input_file
 
   def initialize(input_file)
@@ -13,8 +18,11 @@ class WebsiteChecker
 
   def run
     results = []
-    CSV.foreach(input_file, headers: true, header_converters: :symbol) do |row|
-      results << { host: row[:url], result: check(row[:url]) }
+    csv = CSV.open(input_file, headers: true).read
+    raise UnableToFindHeader unless csv.headers.include?(HEADER)
+
+    csv.each do |row|
+      results << { host: row[HEADER], result: check(row[HEADER]) }
     end
     results
   end
