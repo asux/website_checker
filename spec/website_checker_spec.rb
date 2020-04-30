@@ -7,12 +7,27 @@ RSpec.describe WebsiteChecker do
   subject(:checker) { described_class.new(input_file) }
 
   describe '#run' do
-    context 'when CSV file given' do
+    context 'when valid CSV file given' do
       let(:input_file) { 'spec/fixtures/websites_to_check.csv' }
       let(:results) do
         [
           { host: 'google.com', result: true },
           { host: 'raketaapp.com', result: true },
+          { host: '42istheansweryouneed.com', result: false }
+        ]
+      end
+
+      it 'returns list with results' do
+        expect(checker.run).to eq(results)
+      end
+    end
+
+    context 'when CSV file given with mixed protocols' do
+      let(:input_file) { 'spec/fixtures/with_protocols.csv' }
+      let(:results) do
+        [
+          { host: 'https://google.com', result: true },
+          { host: 'http://raketaapp.com', result: true },
           { host: '42istheansweryouneed.com', result: false }
         ]
       end

@@ -2,7 +2,6 @@
 
 require 'csv'
 require 'net/ping/tcp'
-require 'pry'
 
 # Checks host for availablity using `Net::Ping` from CSV file with `URL` header
 class WebsiteChecker
@@ -29,7 +28,13 @@ class WebsiteChecker
 
   private
 
+  def normilize_host(host)
+    return URI.parse(host).host if host.match?(%r{^https?://})
+
+    host
+  end
+
   def check(host)
-    Net::Ping::TCP.new(host, 'http').ping?
+    Net::Ping::TCP.new(normilize_host(host), 'http').ping?
   end
 end
