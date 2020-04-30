@@ -3,18 +3,25 @@
 require 'csv'
 require 'net/ping/tcp'
 
-# Checks host for availablity using `Net::Ping` from CSV file with `URL` header
+# Checks host for availablity using `Net::Ping::TCP` from CSV file with `URL` header
 class WebsiteChecker
+  # Exception raised when expected {HEADER} not found in CSV
   class UnableToFindHeader < StandardError; end
 
   HEADER = 'URL'
 
   attr_reader :input_file
 
+  # Creates instance with `input_file`
+  # @param input_file [String] path to CSV file
   def initialize(input_file)
     @input_file = File.absolute_path(input_file)
   end
 
+  # Runs actual check of hosts loaded from `input_file`
+  # @return [Array<Hash>] array of hashes with keys `:host`, `:result`
+  # @raise [Errno::ENOENT] if `input_file` not exists
+  # @raise [UnableToFindHeader] if expected {HEADER} not found in CSV
   def run
     results = []
     csv = CSV.open(input_file, headers: true).read
