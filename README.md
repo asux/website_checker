@@ -28,3 +28,7 @@ As a result prints something like this:
     google.com => OK
     raketaapp.com => OK
     somewronghost.com => FAIL
+
+## TODO
+
+[ ] Implement saving result to new CSV file
